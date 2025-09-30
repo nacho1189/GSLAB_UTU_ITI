@@ -1,0 +1,56 @@
+/* Estilos adicionales específicos para la página de detalles */
+    .loading-indicator {
+      font-size: 14px;
+      margin-left: 10px;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .detail-item {
+      border-bottom: 1px solid rgba(127,163,190,0.2);
+      padding-bottom: 8px;
+    }
+
+    .detail-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    button:hover {
+      opacity: 0.8;
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .lab {
+      position: relative;
+    }
+
+    /* Estado desconocido */
+    .is-unknown .status-pill {
+      background: #6b7280;
+      color: #f3f4f6;
+      border-color: #9ca3af;
+    }
+
+    /* Clases para estados */
+    .is-ok {
+      background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+    }
+
+    .is-down {
+      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+    }
+
+    .is-unknown {
+      background: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%);
+    }

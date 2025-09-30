@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SGLITI - Usuarios</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./CSS/usuarios.css" />
+  <link rel="stylesheet" href="./CSS/estadosPc.css" />
+  <link rel="stylesheet" href="./css/consultaUsuarios.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="branding">
+      <a href="" class="logo">
+        <img src="./docs/imgs/logo.png" alt="Logo" id="logo-img">
+      </a>
+    </div>
+
+    <nav class="topnav">
+      <a href="./IndexAdmin.html">Volver</a>
+      <a href="#" onclick="cargarUsuarios()" id="btn-actualizar">🔄 Actualizar</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="usuarios">
+      <h1 class="usuarios-title">
+        Lista de Usuarios
+        <span id="estado-carga" class="loading-indicator" style="display: none;">⏳ Cargando...</span>
+      </h1>
+
+      <div id="usuarios-grid" class="usuarios-grid">
+        <!-- Aquí se insertan dinámicamente los usuarios -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal de edición -->
+  <div id="modal-editar" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="close">&times;</span>
+        <h2>Editar Usuario</h2>
+      </div>
+      <div class="modal-body">
+        <form id="form-editar" class="modal-form">
+          <input type="hidden" id="edit-id" name="id">
+          
+          <label for="edit-nombre">Nombre:</label>
+          <input type="text" id="edit-nombre" name="nombre" required>
+          
+          <label for="edit-email">Email:</label>
+          <input type="email" id="edit-email" name="email" placeholder="Opcional">
+          
+          <label for="edit-ci">Cédula:</label>
+          <input type="text" id="edit-ci" name="ci" required>
+          
+          <label for="edit-rol">Rol:</label>
+          <select id="edit-rol" name="rol" required>
+            <option value="1">Estudiante</option>
+            <option value="2">Asistente</option>
+            <option value="3">Administrador</option>
+            <option value="4">Docente</option>
+            <option value="5">Desactivado</option>
+          </select>
+          
+          <div id="campo-password-modal">
+            <label for="edit-password">Contraseña:</label>
+            <input type="password" id="edit-password" name="password" placeholder="Ingrese contraseña">
+          </div>
+          
+          <div class="modal-buttons">
+            <button type="button" class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+            <button type="submit" class="btn-guardar">Guardar Cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      cargarUsuarios();
+      setInterval(cargarUsuarios, 30000); // auto-actualización cada 30s
+
+      // Event listeners para el modal
+      const modal = document.getElementById('modal-editar');
+      const span = document.getElementsByClassName('close')[0];
+
+      // Cerrar modal al hacer click en X
+      span.onclick = function() {
+        cerrarModal();
+      }
+
+      // Cerrar modal al hacer click fuera de él
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          cerrarModal();
+        }
+      }
+
+      // Manejar cambio de rol en el modal
+      document.getElementById('edit-rol').addEventListener('change', function() {
+        const campoPassword = document.getElementById('campo-password-modal');
+        const passwordInput = document.getElementById('edit-password');
+        
+        if (this.value === "2" || this.value === "3") {
+          campoPassword.style.display = "block";
+          passwordInput.setAttribute("required", "true");
+        } else {
+          campoPassword.style.display = "none";
+          passwordInput.removeAttribute("required");
+          passwordInput.value = "";
+        }
+      });
+
+      // Manejar envío del formulario de edición
+      document.getElementById('form-editar').addEventListener('submit', function(e) {
+        e.preventDefault();
+        guardarEdicion();
+      });
+    });
+
+    function cargarUsuarios() {
+      const grid = document.getElementById("usuarios-grid");
+      const estadoCarga = document.getElementById("estado-carga");
+      
+      grid.innerHTML = "<p>Cargando usuarios...</p>";
+      estadoCarga.style.display = "inline";
+
+      fetch('../controladores/UsuariosControlador.php?accion=listar')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Error en la respuesta del servidor');
+          }
+          return response.json();
+        })
+        .then(data => {
+          estadoCarga.style.display = "none";
+          if (data.success) {
+            renderUsuarios(data.usuarios);
+          } else {
+            grid.innerHTML = "<p>❌ Error al cargar usuarios: " + (data.message || 'Error desconocido') + "</p>";
+          }
+        })
+        .catch(err => {
+          console.error('Error:', err);
+          estadoCarga.style.display = "none";
+          grid.innerHTML = "<p>❌ Error en la consulta: " + err.message + "</p>";
+        });
+    }
+
+    function renderUsuarios(usuarios) {
+      const grid = document.getElementById("usuarios-grid");
+      grid.innerHTML = "";
+
+      if (usuarios.length === 0) {
+        grid.innerHTML = "<p>No hay usuarios registrados</p>";
+        return;
+      }
+
+      usuarios.forEach(usuario => {
+        const card = document.createElement("div");
+        card.className = "usuario-card";
+        
+        // Marcar visualmente si el usuario está desactivado (rol 5)
+        if (usuario.rol == 5) {
+          card.classList.add("inhabilitado");
+        }
+
+        card.innerHTML = `
+          <div class="usuario-info">
+            <h3>${usuario.nombre}</h3>
+            <p><b>ID:</b> ${usuario.id}</p>
+            <p><b>Email:</b> ${usuario.email}</p>
+            <p><b>Contraseña:</b> ${usuario.password}</p>
+            <p><b>CI:</b> ${usuario.ci}</p>
+            <p><b>Rol:</b> ${usuario.rol_texto} (${usuario.rol})</p>
+          </div>
+          <div class="botones-hover">
+            <button class="btn-editar" onclick="abrirModalEditar(${usuario.id})">
+              ✏️ Editar
+            </button>
+            ${usuario.rol != 5 ? `
+            <button class="btn-eliminar" onclick="eliminarUsuario(${usuario.id}, '${usuario.nombre}')">
+              🗑️ Eliminar
+            </button>
+            ` : ''}
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+
+      console.log('Usuarios cargados:', usuarios.length);
+    }
+
+    function abrirModalEditar(id) {
+      // Obtener datos del usuario
+      fetch(`../controladores/UsuariosControlador.php?accion=obtenerUsuario&id=${id}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            const usuario = data.usuario;
+            
+            // Llenar el formulario con los datos
+            document.getElementById('edit-id').value = usuario.id;
+            document.getElementById('edit-nombre').value = usuario.nombre;
+            document.getElementById('edit-email').value = usuario.email || '';
+            document.getElementById('edit-ci').value = usuario.ci;
+            document.getElementById('edit-rol').value = usuario.rol;
+            
+            // Mostrar/ocultar campo contraseña según rol
+            const campoPassword = document.getElementById('campo-password-modal');
+            const passwordInput = document.getElementById('edit-password');
+            
+            if (usuario.rol == 2 || usuario.rol == 3) {
+              campoPassword.style.display = "block";
+              passwordInput.setAttribute("required", "true");
+              passwordInput.value = usuario.password || '';
+            } else {
+              campoPassword.style.display = "none";
+              passwordInput.removeAttribute("required");
+              passwordInput.value = '';
+            }
+            
+            // Mostrar el modal
+            document.getElementById('modal-editar').style.display = "block";
+          } else {
+            alert('Error al obtener datos del usuario: ' + data.message);
+          }
+        })
+        .catch(err => {
+          console.error('Error:', err);
+          alert('Error en la conexión');
+        });
+    }
+
+    function cerrarModal() {
+      document.getElementById('modal-editar').style.display = "none";
+      document.getElementById('form-editar').reset();
+    }
+
+    function guardarEdicion() {
+      const formData = new FormData(document.getElementById('form-editar'));
+      formData.append('accion', 'editarUsuario');
+      
+      fetch('../controladores/UsuariosControlador.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Usuario actualizado exitosamente');
+          cerrarModal();
+          cargarUsuarios(); // Recargar la lista
+        } else {
+          alert('Error al actualizar usuario: ' + data.message);
+        }
+      })
+      .catch(err => {
+        console.error('Error:', err);
+        alert('Error en la conexión');
+      });
+    }
+
+    function eliminarUsuario(id, nombre) {
+      if (confirm(`¿Está seguro que desea desactivar al usuario "${nombre}"?\n\nEsta acción cambiará su rol y no podrá iniciar sesión.`)) {
+        
+        // Mostrar indicador de carga
+        const card = event.target.closest('.usuario-card');
+        card.classList.add('loading');
+        
+        fetch(`../controladores/UsuariosControlador.php?accion=eliminar&id=${id}`)
+          .then(response => response.json())
+          .then(data => {
+            card.classList.remove('loading');
+            
+            if (data.success) {
+              alert('Usuario desactivado exitosamente');
+              cargarUsuarios(); // Recargar la lista
+            } else {
+              alert('Error al desactivar usuario: ' + (data.message || 'Error desconocido'));
+            }
+          })
+          .catch(err => {
+            card.classList.remove('loading');
+            console.error('Error:', err);
+            alert('Error en la conexión: ' + err.message);
+          });
+      }
+    }
+  </script>
+</body>
+</html>

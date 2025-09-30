@@ -1,0 +1,38 @@
+.usuarios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.usuario-card {
+  background: #0f3c58;
+  border-radius: 12px;
+  padding: 16px;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.usuario-card:hover {
+  transform: scale(1.03);
+}
+
+.usuario-info h3 {
+  margin-top: 0;
+  color: #22c55e;
+}
+
+/* Estilo para usuarios inhabilitados (rol 5) */
+.usuario-card.inhabilitado {
+  background: #b91c1c; /* rojo oscuro */
+  color: #f8d7da;      /* texto claro tipo alerta */
+}
+
+.usuario-card.inhabilitado .usuario-info h3 {
+  color: #ffe5e5; /* título más claro */
+}
+
+.usuario-card.inhabilitado p {
+  color: #f1c0c0; /* texto más apagado */
+}

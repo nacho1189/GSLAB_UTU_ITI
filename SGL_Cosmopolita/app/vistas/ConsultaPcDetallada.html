@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estado PC - SGLITI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/estadosPc.css">
+  <link rel="stylesheet" href="./css/consultaPcDetallada.css">
+</head>
+<body>
+  <!-- Barra superior -->
+  <header class="topbar">
+    <div class="branding">
+      <div class="logo">
+        <img src="./docs/imgs/logo.png" alt="Logo de laboratorio">
+      </div>
+      <span class="brand-text">SGLITI</span>
+    </div>
+    <nav>
+      <a href="ConsultaPc.html">← Volver a lista de PCs</a>
+    </nav>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="container">
+    <section class="lab">
+      <h2 class="lab-title">
+        Estado de <span id="pc-nombre">PC</span>
+        <span id="loading-indicator" style="display: none; font-size: 14px; color: #7fa3be;">⏳ Cargando...</span>
+      </h2>
+
+      <!-- Loading overlay -->
+      <div id="loading-overlay" style="display: flex; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15,47,69,0.8); border-radius: 22px; z-index: 100; align-items: center; justify-content: center; color: white; font-size: 18px;">
+        <div>
+          <div style="text-align: center; margin-bottom: 10px;">⏳</div>
+          <div>Cargando información de la PC...</div>
+        </div>
+      </div>
+
+      <!-- Tarjeta única de PC -->
+      <div class="pc-card" style="max-width: 600px; margin: 0 auto;">
+        <div class="monitor" id="pc-monitor">
+          <span class="pc-tag" id="pc-tag">PC</span>
+          <span class="status-pill" id="status-pill">Cargando...</span>
+        </div>
+
+        <div class="pc-details" style="margin-top: 16px; color: white; padding: 16px; background: rgba(15,47,69,0.3); border-radius: 12px;">
+          <div class="detail-item" style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+            <strong>HostName:</strong> 
+            <span id="detail-hostname" style="color: #7fa3be;">-</span>
+          </div>
+          
+          <div class="detail-item" style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+            <strong>Fecha:</strong> 
+            <span id="detail-fecha" style="color: #7fa3be;">-</span>
+          </div>
+          
+          <div class="detail-item" style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+            <strong>Estado:</strong> 
+            <span id="detail-estado" style="color: #7fa3be;">-</span>
+          </div>
+          
+          <div class="detail-item" style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+            <strong>Disco Libre:</strong> 
+            <span id="detail-disco" style="color: #7fa3be;">-</span>
+          </div>
+          
+          <div class="detail-item" style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+            <strong>Usuario:</strong> 
+            <span id="detail-usuario" style="color: #7fa3be;">-</span>
+          </div>
+          
+          <div class="detail-item" style="margin-bottom: 12px;">
+            <strong style="display: block; margin-bottom: 8px;">Descripción:</strong> 
+            <div id="detail-descripcion" style="color: #7fa3be; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; min-height: 50px; word-wrap: break-word;">-</div>
+          </div>
+
+        </div>
+
+        <!-- Mensaje de error -->
+        <div id="error-message" style="display: none; margin-top: 16px; padding: 16px; background: rgba(239,68,68,0.1); border: 1px solid #ef4444; border-radius: 8px; color: #ef4444;">
+          <strong>Error:</strong> <span id="error-text"></span>
+        </div>
+
+        <!-- Botones de acción -->
+        <div style="margin-top: 20px; text-align: center; gap: 10px; display: flex; justify-content: center;">
+          <button onclick="actualizarDatos()" id="btn-actualizar" style="background: var(--ok); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+            🔄 Actualizar
+          </button>
+
+          <a id="btn-editar" href="#" style="background: #2563eb; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; text-decoration: none; display: inline-block;">
+            ✏️ Editar Estado
+          </a>
+
+          <button onclick="window.history.back()" style="background: #6b7280; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+            ← Volver
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Variables globales
+    let pcActual = '';
+    let labActual = '';
+
+    // Cargar datos automáticamente al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+      // Obtener parámetros de la URL
+      const urlParams = new URLSearchParams(window.location.search);
+      pcActual = urlParams.get('pc') || '';
+      labActual = urlParams.get('lab') || 'LAB6';
+
+      if (pcActual) {
+        console.log(`🔍 Cargando detalles para ${pcActual} en ${labActual}`);
+        document.getElementById('pc-nombre').textContent = pcActual;
+        document.getElementById('pc-tag').textContent = pcActual;
+        cargarDetallesPC(pcActual, labActual);
+        
+        // Configurar el botón de editar
+        const btnEditar = document.getElementById('btn-editar');
+        btnEditar.href = `PcForm.html?pc=${encodeURIComponent(pcActual)}`;
+      } else {
+        mostrarError('No se especificó qué PC consultar');
+      }
+    });
+
+    /**
+     * Función principal para cargar los detalles de una PC específica
+     */
+    function cargarDetallesPC(pc, lab) {
+      console.log(`📡 Consultando detalles de ${pc}...`);
+      
+      const loadingOverlay = document.getElementById('loading-overlay');
+      const loadingIndicator = document.getElementById('loading-indicator');
+      const btnActualizar = document.getElementById('btn-actualizar');
+
+      // Mostrar indicadores de carga
+      if (loadingOverlay) loadingOverlay.style.display = 'flex';
+      if (loadingIndicator) {
+        loadingIndicator.style.display = 'inline';
+        loadingIndicator.textContent = '⏳ Cargando...';
+      }
+      if (btnActualizar) {
+        btnActualizar.innerHTML = '⏳ Cargando...';
+        btnActualizar.disabled = true;
+      }
+
+      // Ocultar mensaje de error
+      document.getElementById('error-message').style.display = 'none';
+
+      // Realizar consulta AJAX
+      fetch(`../controladores/RegistrosControlador.php?accion=consultarPC&pc=${encodeURIComponent(pc)}&lab=${encodeURIComponent(lab)}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => {
+        console.log('📡 Respuesta recibida:', response.status);
+        
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status}`);
+        }
+        
+        return response.json();
+      })
+      .then(data => {
+        console.log('📊 Datos procesados:', data);
+        
+        if (data.success && data.registro) {
+          actualizarInterfazDetallada(data.registro);
+          mostrarMensajeExito('✅ Información actualizada');
+        } else {
+          throw new Error(data.error || 'No se encontraron datos para esta PC');
+        }
+      })
+      .catch(error => {
+        console.error('❌ Error en la consulta:', error);
+        mostrarError('Error al cargar información: ' + error.message);
+      })
+      .finally(() => {
+        // Ocultar indicadores de carga
+        if (loadingOverlay) loadingOverlay.style.display = 'none';
+        if (loadingIndicator) loadingIndicator.style.display = 'none';
+        if (btnActualizar) {
+          btnActualizar.innerHTML = '🔄 Actualizar';
+          btnActualizar.disabled = false;
+        }
+      });
+    }
+
+    /**
+     * Actualizar la interfaz con los datos recibidos
+     */
+    function actualizarInterfazDetallada(registro) {
+      console.log('Actualizando interfaz detallada:', registro);
+
+      const monitor = document.getElementById('pc-monitor');
+      const statusPill = document.getElementById('status-pill');
+
+      // Actualizar estado visual
+      monitor.classList.remove('is-ok', 'is-down', 'is-unknown');
+      
+      if (registro.estado) {
+        monitor.classList.add('is-ok');
+        statusPill.textContent = 'Funcionando';
+      } else {
+        monitor.classList.add('is-down');
+        statusPill.textContent = 'No Funciona';
+      }
+
+      // Actualizar solo los 4 campos solicitados
+      document.getElementById('detail-fecha').textContent = formatearFechaCompleta(registro.fecha);
+      document.getElementById('detail-estado').textContent = registro.estado ? 'Funcionando' : 'No Funciona';
+      document.getElementById('detail-disco').textContent = registro.diskFree ? `${registro.diskFree} GB` : 'No disponible';
+      document.getElementById('detail-descripcion').textContent = registro.descripcion || 'Sin descripción';
+    }
+
+    /**
+     * Función para actualizar los datos manualmente
+     */
+    function actualizarDatos() {
+      if (pcActual && labActual) {
+        cargarDetallesPC(pcActual, labActual);
+      }
+    }
+
+    /**
+     * Formatear fecha de manera completa
+     */
+    function formatearFechaCompleta(fechaStr) {
+      if (!fechaStr) return '-';
+      
+      try {
+        const fecha = new Date(fechaStr);
+        return fecha.toLocaleDateString('es-ES', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        });
+      } catch (e) {
+        return fechaStr;
+      }
+    }
+
+    /**
+     * Mostrar mensaje de éxito
+     */
+    function mostrarMensajeExito(mensaje) {
+      const loadingIndicator = document.getElementById('loading-indicator');
+      if (loadingIndicator) {
+        loadingIndicator.textContent = mensaje;
+        loadingIndicator.style.display = 'inline';
+        loadingIndicator.style.color = '#22c55e';
+        
+        setTimeout(() => {
+          loadingIndicator.style.display = 'none';
+        }, 3000);
+      }
+    }
+
+    /**
+     * Mostrar mensaje de error
+     */
+    function mostrarError(mensaje) {
+      const errorMessage = document.getElementById('error-message');
+      const errorText = document.getElementById('error-text');
+      
+      if (errorMessage && errorText) {
+        errorText.textContent = mensaje;
+        errorMessage.style.display = 'block';
+      }
+
+      // También mostrar en el indicador
+      const loadingIndicator = document.getElementById('loading-indicator');
+      if (loadingIndicator) {
+        loadingIndicator.textContent = '❌ Error';
+        loadingIndicator.style.display = 'inline';
+        loadingIndicator.style.color = '#ef4444';
+      }
+      
+      console.error('Error:', mensaje);
+    }
+  </script>
+</body>
+</html>

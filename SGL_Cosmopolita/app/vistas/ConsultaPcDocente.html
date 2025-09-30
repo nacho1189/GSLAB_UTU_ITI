@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SGLITI — Lab 1</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./CSS/estadosPc.css" />
+  <link rel="stylesheet" href="./css/consultaPcDocente.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="branding">
+      <a href="" class="logo">
+        <img src="./docs/imgs/logo.png" alt="Logo de laboratorio" id="logo-img">
+      </a>
+    </div>
+
+    <nav class="topnav">
+      <a href="#" onclick="cargarEstados()" id="btn-actualizar">🔄 Actualizar</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="lab">
+      <h1 class="lab-title">
+        Laboratorio 6
+        <span id="estado-carga" class="loading-indicator" style="display: none;">⏳ Cargando...</span>
+      </h1>
+
+      <!-- Loading overlay -->
+      <div id="loading-overlay" style="display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15,47,69,0.8); border-radius: 22px; z-index: 100; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">
+        <div>
+          <div style="text-align: center; margin-bottom: 10px;">⏳</div>
+          <div>Cargando estados de las PCs...</div>
+        </div>
+      </div>
+
+      <div class="pc-grid">
+        <!-- PCs del 1 al 11 -->
+        <div class="pc-card is-ok" data-pc="PC1">
+          <div class="monitor">
+            <span class="pc-tag">PC1</span>
+            <span class="status-pill">Sin datos</span>
+            <div class="last-update" style="position: absolute; top: 8px; right: 8px; font-size: 10px; color: #7fa3be; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;"></div>
+          </div>
+        </div>
+
+        <div class="pc-card is-ok" data-pc="PC2">
+          <div class="monitor">
+            <span class="pc-tag">PC2</span>
+            <span class="status-pill">Sin datos</span>
+            <div class="last-update" style="position: absolute; top: 8px; right: 8px; font-size: 10px; color: #7fa3be; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;"></div>
+          </div>
+        </div>
+
+        <div class="pc-card is-ok" data-pc="PC3">
+          <div class="monitor">
+            <span class="pc-tag">PC3</span>
+            <span class="status-pill">Sin datos</span>
+            <div class="last-update" style="position: absolute; top: 8px; right: 8px; font-size: 10px; color: #7fa3be; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;"></div>
+          </div>
+        </div>
+
+        <div class="pc-card is-ok" data-pc="PC4">
+          <div class="monitor">
+            <span class="pc-tag">PC4</span>
+            <span class="status-pill">Sin datos</span>
+            <div class="last-update" style="position: absolute; top: 8px; right: 8px; font-size: 10px; color: #7fa3be; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;"></div>
+          </div>
+        </div>
+
+        <div class="pc-card is-ok" data-pc="PC5">
+          <div class="monitor">
+            <span class="pc-tag">PC5</span>
+            <span class="status-pill">Sin datos</span>
+            <div class="last-update" style="position: absolute; top: 8px; right: 8px; font-size: 10px; color: #7fa3be; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;"></div>
+          </div>
+        </div>
+
+        <div class="pc-card is-ok" data-pc="PC6">
+          <div class="monitor">
+            <span class="pc-tag">PC6</span>
+            <span class="status-pill">Sin datos</span>
+            <div class="last-update" style="position: absolute; top: 8px; right: 8px; font-size: 10px; color: #7fa3be; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;"></div>
+          </div>
+        </div>
+
+        <div class="pc-card is-ok" data-pc="PC7">
+          <div class="monitor">
+            <span class="pc-tag">PC7</span>
+            <span class="status-pill">Sin datos</span>
+            <div class="last-update" style="position: absolute; top: 8px; right: 8px; font-size: 10px; color: #7fa3be; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;"></div>
+          </div>
+        </div>
+
+        <div class="pc-card is-ok" data-pc="PC8">
+          <div class="monitor">
+            <span class="pc-tag">PC8</span>
+            <span class="status-pill">Sin datos</span>
+            <div class="last-update" style="position: absolute; top: 8px; right: 8px; font-size: 10px; color: #7fa3be; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;"></div>
+          </div>
+        </div>
+
+        <div class="pc-card is-ok" data-pc="PC9">
+          <div class="monitor">
+            <span class="pc-tag">PC9</span>
+            <span class="status-pill">Sin datos</span>
+            <div class="last-update" style="position: absolute; top: 8px; right: 8px; font-size: 10px; color: #7fa3be; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;"></div>
+          </div>
+        </div>
+
+        <div class="pc-card is-ok" data-pc="PC10">
+          <div class="monitor">
+            <span class="pc-tag">PC10</span>
+            <span class="status-pill">Sin datos</span>
+            <div class="last-update" style="position: absolute; top: 8px; right: 8px; font-size: 10px; color: #7fa3be; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;"></div>
+          </div>
+        </div>
+
+        <div class="pc-card is-ok" data-pc="PC11">
+          <div class="monitor">
+            <span class="pc-tag">PC11</span>
+            <span class="status-pill">Sin datos</span>
+            <div class="last-update" style="position: absolute; top: 8px; right: 8px; font-size: 10px; color: #7fa3be; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Cargar estados automáticamente al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Página cargada, iniciando consulta de estados...');
+      cargarEstados();
+      
+      // Configurar actualización automática cada 30 segundos
+      setInterval(cargarEstados, 30000);
+    });
+
+    /**
+     * Función principal para cargar los estados de las PCs
+     */
+    function cargarEstados() {
+      console.log('🔄 Iniciando carga de estados...');
+      
+      const loadingOverlay = document.getElementById('loading-overlay');
+      const btnActualizar = document.getElementById('btn-actualizar');
+      
+      // Mostrar indicadores de carga
+      if (loadingOverlay) {
+        loadingOverlay.style.display = 'flex';
+      }
+      
+      if (btnActualizar) {
+        btnActualizar.innerHTML = '⏳ Actualizando...';
+        btnActualizar.disabled = true;
+      }
+
+      // Realizar consulta AJAX - Ajustar ruta según tu estructura de carpetas
+      fetch('../controladores/RegistrosControlador.php?accion=consultarEstados&lab=LAB6', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => {
+        console.log('📡 Respuesta recibida:', response.status);
+        
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status}`);
+        }
+        
+        return response.json();
+      })
+      .then(data => {
+        console.log('📊 Datos procesados:', data);
+        
+        if (data.success) {
+          actualizarInterfaz(data.registros);
+          mostrarMensajeExito(`✅ Estados actualizados (${data.total_pcs} PCs)`);
+        } else {
+          throw new Error(data.error || 'Error desconocido');
+        }
+      })
+      .catch(error => {
+        console.error('❌ Error en la consulta:', error);
+        mostrarMensajeError('❌ Error al cargar estados: ' + error.message);
+      })
+      .finally(() => {
+        // Ocultar indicadores de carga
+        if (loadingOverlay) {
+          loadingOverlay.style.display = 'none';
+        }
+        
+        if (btnActualizar) {
+          btnActualizar.innerHTML = '🔄 Actualizar';
+          btnActualizar.disabled = false;
+        }
+      });
+    }
+
+    /**
+     * Actualizar la interfaz con los datos recibidos
+     */
+    function actualizarInterfaz(registros) {
+      console.log('🎨 Actualizando interfaz con', Object.keys(registros).length, 'registros');
+      
+      // Recorrer todas las tarjetas de PC
+      const pcCards = document.querySelectorAll('.pc-card[data-pc]');
+      
+      pcCards.forEach(card => {
+        const pcNumber = card.getAttribute('data-pc');
+        const registro = registros[pcNumber];
+        
+        if (registro) {
+          // Hay datos para esta PC
+          actualizarTarjetaPC(card, registro);
+        } else {
+          // No hay datos, mostrar estado desconocido
+          actualizarTarjetaPC(card, null);
+        }
+      });
+    }
+
+    /**
+     * Actualizar una tarjeta individual de PC
+     */
+    function actualizarTarjetaPC(card, registro) {
+      const statusPill = card.querySelector('.status-pill');
+      const lastUpdate = card.querySelector('.last-update');
+      
+      if (registro) {
+        // Configurar estado
+        const estado = registro.estado;
+        const fechaObj = new Date(registro.fecha);
+        
+        // Limpiar clases de estado previas
+        card.classList.remove('is-ok', 'is-down', 'is-unknown');
+        
+        if (estado) {
+          card.classList.add('is-ok');
+          statusPill.textContent = 'Funciona';
+        } else {
+          card.classList.add('is-down');
+          statusPill.textContent = 'No funciona';
+        }
+        
+        // Actualizar fecha del último registro
+        if (lastUpdate) {
+          lastUpdate.textContent = formatearFecha(fechaObj);
+          lastUpdate.title = `Último registro: ${registro.fecha}\nDescripción: ${registro.descripcion || 'Sin descripción'}`;
+        }
+        
+        console.log(`✅ ${registro.numeroPC}: ${estado ? 'OK' : 'DOWN'} - ${registro.fecha}`);
+        
+      } else {
+        // Sin datos
+        card.classList.remove('is-ok', 'is-down');
+        card.classList.add('is-unknown');
+        statusPill.textContent = 'Sin datos';
+        
+        if (lastUpdate) {
+          lastUpdate.textContent = '';
+          lastUpdate.title = 'No hay registros disponibles';
+        }
+      }
+    }
+
+    /**
+     * Formatear fecha para mostrar
+     */
+    function formatearFecha(fecha) {
+      const ahora = new Date();
+      const diffMs = ahora - fecha;
+      const diffMinutos = Math.floor(diffMs / (1000 * 60));
+      const diffHoras = Math.floor(diffMs / (1000 * 60 * 60));
+      const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      
+      if (diffMinutos < 1) {
+        return 'Ahora';
+      } else if (diffMinutos < 60) {
+        return `${diffMinutos}min`;
+      } else if (diffHoras < 24) {
+        return `${diffHoras}h`;
+      } else if (diffDias < 7) {
+        return `${diffDias}d`;
+      } else {
+        return fecha.toLocaleDateString('es-ES');
+      }
+    }
+
+    /**
+     * Mostrar mensaje de éxito
+     */
+    function mostrarMensajeExito(mensaje) {
+      const estadoCarga = document.getElementById('estado-carga');
+      if (estadoCarga) {
+        estadoCarga.textContent = mensaje;
+        estadoCarga.style.display = 'inline';
+        estadoCarga.style.color = '#22c55e';
+        
+        setTimeout(() => {
+          estadoCarga.style.display = 'none';
+        }, 3000);
+      }
+    }
+
+    /**
+     * Mostrar mensaje de error
+     */
+    function mostrarMensajeError(mensaje) {
+      const estadoCarga = document.getElementById('estado-carga');
+      if (estadoCarga) {
+        estadoCarga.textContent = mensaje;
+        estadoCarga.style.display = 'inline';
+        estadoCarga.style.color = '#ef4444';
+        
+        setTimeout(() => {
+          estadoCarga.style.display = 'none';
+        }, 5000);
+      }
+      
+      // También mostrar en consola
+      console.error(mensaje);
+    }
+  </script>
+</body>
+</html>

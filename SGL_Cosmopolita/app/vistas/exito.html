@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Creado - SGLITI</title>
+    <link rel="stylesheet" href="./CSS/estilos.css">
+    <link rel="stylesheet" href="./CSS/respuestas.css">
+</head>
+<body>
+    <header>
+        <form class="logo"><a href="index.html"><img src="./docs/imgs/logo.png" alt="Logo de laboratorio"></a></form>
+        <h1>SGLITI</h1>
+    </header>
+    
+    <main>
+        <div class="mensaje-exito">
+            <h2>✅ ¡Registro creado exitosamente!</h2>
+            <div class="detalles-registro">
+                <p><strong>PC:</strong> <span id="pc-info"></span></p>
+                <p><strong>Laboratorio: 6</strong></p>
+                <p><strong>Estado:</strong> <span id="estado-info"></span></p>
+            </div>
+            
+            <div class="botones-accion">
+                <a href="EstadoPc.html" class="btn btn-primary">Volver a lista de PC</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Obtener datos de la URL
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Mostrar información del registro (usando estructura real)
+            document.getElementById('pc-info').textContent = urlParams.get('pc') || '-';
+            document.getElementById('estado-info').textContent = urlParams.get('estado') || '-';
+            document.getElementById('comentario-info').textContent = urlParams.get('comentario') || '-';
+            document.getElementById('usuario-info').textContent = urlParams.get('usuario') || '-';
+            document.getElementById('fecha-info').textContent = urlParams.get('fecha') || new Date().toLocaleString('es-ES');
+            
+            // Configurar botón para registrar otra PC (simplificado)
+            const pc = urlParams.get('pc');
+            if (pc) {
+                document.getElementById('btn-registrar-otra').href = `PcForm.html?pc=${pc}`;
+            }
+        };
+    </script>
+</body>
+</html>

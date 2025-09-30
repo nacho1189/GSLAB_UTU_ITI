@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SGLITI</title>
+  <link rel="stylesheet" href="./CSS/style.css">
+
+</head>
+<body>
+  <header>
+    <form class="logo"><a href="index.html"><img src="./docs/imgs/logo.png" alt="Logo de laboratorio"> </a>
+      
+    </form>
+    <nav>
+      <a href="Usuario.html">Usuario</a>
+      <a href="Docente.html">Docente</a>
+    </nav>
+  </header>
+  <main>
+    <form class="formulario" action="../controladores/UsuariosControlador.php" method="POST">
+      <input type="hidden" name="accion" value="loginAdmin">
+      <div id="mensaje" class="error"></div>    
+      <label for="ci"></label>
+      <input id="ci" type="text" placeholder="C.I" name="ci" required>
+      
+      <label for="contrasena"></label>
+      <div class="password-container">
+        <input id="password" type="password" placeholder="Contraseña" name="password" required>
+      </div>
+      <div id="mensajePassword" class="error"></div>
+      <button type="submit">Ingresar</button>
+      <div id="error-message" class="error-login" style="display: none;"></div>
+    </form>
+  </main>
+  <footer> 
+  </footer>
+
+  <script>
+    // Verificar si hay error en la URL
+    window.onload = function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const error = urlParams.get('error');
+      const errorDiv = document.getElementById('error-message');
+      
+      if (error === 'login_failed') {
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = 'Credenciales incorrectas';
+        
+        // Limpiar la URL después de mostrar el error
+        const url = new URL(window.location);
+        url.searchParams.delete('error');
+        window.history.replaceState({}, document.title, url);
+      }
+    };
+  </script>
+</body>
+</html>
+

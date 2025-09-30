@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrar Estado PC - SGLITI</title>
+  <link rel="stylesheet" href="./CSS/estilos.css">
+</head>
+<body>
+  <header>
+    <form class="logo">
+      <a href="index.html">
+        <img src="./docs/imgs/logo.png" alt="Logo de laboratorio">
+      </a>
+    </form>
+    <h1>SGLITI</h1>
+  </header>
+  
+  <main>
+    <div class="contenedor-formulario">
+      <h1 id="titulo-pc">Registrar estado de PC</h1>
+      
+      <!-- Información de la PC seleccionada -->
+      <div class="info-pc">
+        <h3>PC Seleccionada:</h3>
+        <p><strong>PC:</strong> <span id="pc-display">Cargando...</span></p>
+        <p><strong>Laboratorio: 6</strong></p>
+      </div>
+      
+      <form action="../controladores/RegistrosControlador.php" method="POST" id="formulario-registro">
+        <!-- Campo oculto con el número de PC -->
+        <input type="hidden" id="pcNumber" name="pcNumber" value="">
+        <input type="hidden" name="accion" value="registroUsuario">
+        
+        <!-- Campo Estado -->
+        <label for="estado">Estado de la PC:</label>
+        <select name="estado" id="estado" required>
+          <option value="1" selected>Funcionando</option>
+          <option value="0">No Funcionando</option>
+        </select>
+        
+        <!-- Campo Comentario -->
+        <label for="comentario">Comentario:</label>
+        <textarea name="comentario" id="comentario" rows="4" placeholder="Escribe aquí cualquier observación sobre el estado de la PC..." required></textarea>
+        
+        <!-- Botones -->
+        <div class="botones-container">
+          <button type="submit" id="btn-registrar">Registrar Estado</button>
+          <a href="EstadoPc.html" class="btn-volver">Volver a PCs</a>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    // Configurar formulario al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('=== INICIANDO PcForm ===');
+      console.log('URL completa:', window.location.href);
+      
+      // Obtener parámetros de la URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const pcName = urlParams.get('pc');
+      
+      console.log('Parámetro PC obtenido:', pcName);
+      
+      if (pcName) {
+        // Configurar el formulario
+        document.getElementById('pcNumber').value = pcName;
+        document.getElementById('pc-display').textContent = pcName;
+        document.getElementById('titulo-pc').textContent = `Registrar estado de ${pcName}`;
+        
+        console.log('✅ Formulario configurado para PC:', pcName);
+      } else {
+        console.error('❌ No se encontró parámetro PC en URL');
+        alert('Error: No se especificó qué PC registrar. Serás redirigido.');
+        window.location.href = 'EstadoPc.html';
+      }
+    });
+    
+    // Manejar envío del formulario
+    document.getElementById('formulario-registro').addEventListener('submit', function(e) {
+      console.log('=== ENVIANDO FORMULARIO ===');
+      
+      const pcNumber = document.getElementById('pcNumber').value;
+      const estado = document.getElementById('estado').value;
+      const comentario = document.getElementById('comentario').value.trim();
+      
+      console.log('Datos del formulario:');
+      console.log('- PC:', pcNumber);
+      console.log('- Estado:', estado);
+      console.log('- Comentario:', comentario);
+      
+      // Validaciones
+      if (!pcNumber) {
+        e.preventDefault();
+        alert('Error: No se ha seleccionado una PC válida');
+        console.error('❌ PC no válida');
+        return;
+      }
+      
+      if (!comentario) {
+        e.preventDefault();
+        alert('Error: El comentario es obligatorio');
+        console.error('❌ Comentario vacío');
+        return;
+      }
+      
+      console.log('✅ Formulario válido - enviando...');
+    });
+  </script>
+</body>
+</html>

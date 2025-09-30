@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SGLITI - Laboratorios</title>
+  <link rel="stylesheet" href="./CSS/estilos.css">
+</head>
+<body>
+  <header>
+    <form class="logo">
+      <a href="index.html">
+        <img src="./docs/imgs/logo.png" alt="Logo de laboratorio">
+      </a>
+    </form>
+    <h1>SGLITI</h1>
+  </header>
+
+  <main class="laboratorios">
+    <section class="lab">
+      <h2>Laboratorio 6</h2>
+      <a class="pc" onclick="irAPcForm('PC1')">PC1</a>
+      <a class="pc" onclick="irAPcForm('PC2')">PC2</a>
+      <a class="pc" onclick="irAPcForm('PC3')">PC3</a>
+      <a class="pc" onclick="irAPcForm('PC4')">PC4</a>
+      <a class="pc" onclick="irAPcForm('PC5')">PC5</a>
+      <a class="pc" onclick="irAPcForm('PC6')">PC6</a>
+      <a class="pc" onclick="irAPcForm('PC7')">PC7</a>
+      <a class="pc" onclick="irAPcForm('PC8')">PC8</a>
+      <a class="pc" onclick="irAPcForm('PC9')">PC9</a>
+      <a class="pc" onclick="irAPcForm('PC10')">PC10</a>
+      <a class="pc" onclick="irAPcForm('PC11')">PC11</a>
+    </section>
+  </main>
+  
+  <footer>
+    
+  </footer>
+
+  <script>
+    function irAPcForm(pc) {
+      console.log('Navegando a PcForm con PC:', pc);
+      const url = `PcForm.html?pc=${encodeURIComponent(pc)}`;
+      console.log('URL generada:', url);
+      window.location.href = url;
+    }
+
+    // Debug: verificar que los enlaces se están generando correctamente
+    window.onload = function() {
+      console.log('Página EstadoPc cargada');
+      const enlaces = document.querySelectorAll('.pc');
+      console.log('Enlaces encontrados:', enlaces.length);
+    };
+  </script>
+</body>
+</html>

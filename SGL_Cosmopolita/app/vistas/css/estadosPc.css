@@ -1,0 +1,167 @@
+:root{
+  --bg: #e6edf4;
+  --topbar: #00335a;
+  --panel-from: #8fa1b4;
+  --panel-to:   #7f92a8;
+  --monitor: #0b3149;
+  --monitor-border: #072a3e;
+  --card: #0f3c58;
+  --ink: #0f2f45;
+  --ok:   #22c55e;
+  --down: #ef4444;
+  --shadow: 0 10px 24px rgba(15,47,69,.18);
+  --r-xl: 22px; --r-md: 14px; --r-sm: 10px;
+  --white: #f6fbff;
+}
+
+*,
+*::before,
+*::after{ box-sizing:border-box; }
+
+.logo img {
+  width: 120px;
+  height: auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+html,body{
+  height:100%;
+  margin:0;
+  font-family:"Inter", system-ui, Segoe UI, Roboto, Arial, sans-serif;
+  color:var(--ink);
+  background:var(--bg);
+}
+
+/* Barra superior */
+.topbar {
+  display: flex;
+  justify-content: space-between; /* separa branding a la izq y nav a la der */
+  align-items: center;
+  background: var(--topbar);
+  color: #e7f4ff;
+  padding-inline: clamp(16px, 5vw, 64px);
+  padding-block: 8px;
+  box-shadow: 0 2px 0 rgba(0,0,0,.05);
+}
+
+.topbar nav a {
+  margin-left: 1.5rem;
+  color: #7fa3be;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.topnav a:hover {
+  color: #ffffff; /* opcional: cambia a blanco al pasar el mouse */
+}
+
+
+nav a {
+  margin-left: 1.5rem;
+  color: #7fa3be;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.logo img{
+  height: 120px;  /* fuerza el alto del logo */
+  width: auto;    /* mantiene proporción */
+}
+
+.branding{ display:flex; align-items:center; gap:12px; }
+.brand-text{ font-weight:800; font-size:28px; letter-spacing:.5px; }
+
+.container{
+  max-width: 880px;
+  margin: 32px auto 48px;
+  padding-inline: clamp(12px, 3vw, 24px);
+}
+
+/* Panel laboratorio */
+.lab{
+  background: linear-gradient(180deg, var(--panel-from), var(--panel-to));
+  border-radius: var(--r-xl);
+  padding: 18px 18px 24px;
+  box-shadow: var(--shadow);
+}
+.lab-title{
+  text-align:center; color:var(--white);
+  font-size:24px; font-weight:800;
+  margin: 4px 0 16px;
+}
+
+/* Grid 2x4 */
+.pc-grid{
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+/* Tarjeta de PC */
+.pc-card{
+  background: var(--card);
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 8px 18px rgba(0,0,0,.08);
+}
+
+/* Monitor */
+.monitor{
+  position: relative;
+  background: var(--monitor);
+  border: 2px solid var(--monitor-border);
+  border-radius: 14px;
+  min-height: 110px;
+  display: grid; place-items: center;
+  overflow: hidden;
+}
+.monitor::after{
+  /* peana/soporte del monitor */
+  content:"";
+  position:absolute; left:50%; bottom:-12px; transform:translateX(-50%);
+  width:46px; height:10px; border-radius:8px;
+  background: var(--monitor); border: 2px solid var(--monitor-border);
+}
+
+/* Etiqueta de la máquina (SIEMPRE visible) */
+.pc-tag{
+  position: absolute; top: 8px; left: 8px;
+  font-size: 12px; font-weight: 800; letter-spacing: .3px;
+  padding: 4px 8px; border-radius: 8px;
+  background: #103753; color: #d9ecff;
+  border: 1px solid rgba(255,255,255,.15);
+  text-transform: uppercase;
+}
+
+/* Estado: abajo a la derecha (no tapa el nombre) */
+.status-pill{
+  position: absolute; right: 8px; bottom: 8px;
+  font-size: 12px; font-weight: 800;
+  padding: 6px 10px; border-radius: 999px;
+  background: #123c59; color: #e7f5ff; border: 1px solid rgba(255,255,255,.25);
+  box-shadow: 0 6px 12px rgba(0,0,0,.12);
+}
+
+/* Colores por estado */
+.is-ok .status-pill{
+  background: var(--ok);
+  color: #062a12;
+  border-color: #0f682f;
+  box-shadow: 0 8px 16px rgba(34,197,94,.18);
+}
+.is-down .status-pill{
+  background: var(--down);
+  color: #2c0a0a;
+  border-color: #7a1c1c;
+  box-shadow: 0 8px 16px rgba(239,68,68,.18);
+}
+
+/* Responsivo */
+@media (max-width: 600px){
+  .pc-grid{ grid-template-columns: 1fr; }
+}

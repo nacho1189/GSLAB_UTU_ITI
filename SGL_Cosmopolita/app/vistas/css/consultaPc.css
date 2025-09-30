@@ -1,0 +1,49 @@
+/* Estilos adicionales para el estado de carga y PC sin datos */
+    .loading-indicator {
+      font-size: 14px;
+      margin-left: 10px;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .is-unknown .status-pill {
+      background: #6b7280;
+      color: #f3f4f6;
+      border-color: #9ca3af;
+    }
+
+    .pc-card .monitor {
+      position: relative;
+    }
+
+    .last-update {
+      font-size: 10px !important;
+      position: absolute !important;
+      top: 30px !important;
+      right: 8px !important;
+      color: #7fa3be !important;
+      background: rgba(0,0,0,0.3) !important;
+      padding: 2px 6px !important;
+      border-radius: 4px !important;
+      max-width: 60px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    #btn-actualizar {
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+
+    #btn-actualizar:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .lab {
+      position: relative;
+    }

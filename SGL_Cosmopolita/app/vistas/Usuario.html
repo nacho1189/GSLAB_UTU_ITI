@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SGLITI</title>
+  <link rel="stylesheet" href="./CSS/style.css">
+  <script src="/public/JS/client_side_form_verification.js" defer></script>
+</head>
+<body>
+  <header>
+    <form class="logo"><a href="index.html"><img src="./docs/imgs/logo.png" alt="Logo de laboratorio"> </a>
+      
+    </form>
+    <nav>
+      <a href="Docente.html">Docente</a>
+      <a href="Admin.html">Asistente</a>
+    </nav>
+  </header>
+  <main>
+    <form action="../controladores/UsuariosControlador.php" method="POST" class="formulario">     
+      <label class="placeholder"></label>
+      <div id="mensaje" class="error"></div>
+      <input type="hidden" name="accion" value="loginUser">
+      <input class="form_val" id="ci" name="ci" type="text" placeholder="C.I" required>
+      <button type="submit">Ingresar</button>
+      <div id="error-message" class="error-login" style="display: none;"></div>
+    </form>
+  </main>
+  <footer>
+  </footer>
+
+  <script>
+    // Verificar si hay error en la URL
+    window.onload = function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const error = urlParams.get('error');
+      const errorDiv = document.getElementById('error-message');
+      
+      if (error === 'login_failed') {
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = 'No hay usuario con esa cédula';
+        
+        // Limpiar la URL después de mostrar el error
+        const url = new URL(window.location);
+        url.searchParams.delete('error');
+        window.history.replaceState({}, document.title, url);
+      }
+    };
+  </script>
+</body>
+</html>
